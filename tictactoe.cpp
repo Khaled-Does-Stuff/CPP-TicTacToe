@@ -101,7 +101,7 @@ string getWinPlayer() {
 
     // Still has input left
     for (string val : gameBoard) {
-        if (val != "X" && val != "O") return "";
+        if (val != X && val != O) return "";
     }
 
     return "Nobody";  // Draw

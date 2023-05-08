@@ -1,8 +1,6 @@
 #include <iostream>
 #include <limits>
 
-#include "colormod.h"
-
 using namespace std;
 void printCurrentGameState();
 void takeInput();
@@ -16,8 +14,9 @@ inline bool theyAreSame(string x, string y, string z) {
 string gameBoard[9] = {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
 bool playerOne = true;
 
-const string X = "X";
-const string O = "O";
+// Color taken from:  https://stackoverflow.com/a/45300654/16867144
+const string X = "\033[1;31;49mX\033[0m";
+const string O = "\033[1;32;49mO\033[0m";
 
 int main() {
     do {
@@ -34,17 +33,15 @@ int main() {
 }
 
 void printCurrentGameState() {
-    // TODO: Hard to read
-
     // Clears the console (in linux/win11)
     // https://stackoverflow.com/a/43884673/16867144
     cout << "\033c" << endl;
 
-    cout << gameBoard[0] << " | " << gameBoard[1] << " | " << gameBoard[2] << endl;
-    cout << "---------" << endl;
-    cout << gameBoard[3] << " | " << gameBoard[4] << " | " << gameBoard[5] << endl;
-    cout << "_________" << endl;
-    cout << gameBoard[6] << " | " << gameBoard[7] << " | " << gameBoard[8] << endl;
+    cout << " " << gameBoard[0] << " | " << gameBoard[1] << " | " << gameBoard[2] << endl;
+    cout << "-----------" << endl;
+    cout << " " << gameBoard[3] << " | " << gameBoard[4] << " | " << gameBoard[5] << endl;
+    cout << "-----------" << endl;
+    cout << " " << gameBoard[6] << " | " << gameBoard[7] << " | " << gameBoard[8] << endl;
     cout << endl;
 }
 

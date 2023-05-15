@@ -53,12 +53,14 @@ void takeInput() {
     int input;
     cin >> input;
 
-    // TODO Validate numeric input
-    // while (cin.fail()) {
-    //     cin.clear();
-    //     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    //     takeInput();
-    // }
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        cout << "Invalid input. Try again." << endl;
+
+        takeInput();
+        return;
+    }
 
     if (input < 1 || input > 9 ||
         gameBoard[input - 1] == X || gameBoard[input - 1] == O) {

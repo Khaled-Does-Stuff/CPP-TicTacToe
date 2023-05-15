@@ -57,19 +57,22 @@ void takeInput() {
     int input;
     cin >> input;
 
-    // TODO Validate numeric input
-    // while (cin.fail()) {
-    //     cin.clear();
-    //     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    //     takeInput();
-    // }
-
-    if (input < 1 || input > 9) {
+    if (cin.fail()) {
+        cin.clear();
+        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "Invalid input. Try again." << endl;
+
         takeInput();
         return;
     }
 
+    if (input < 1 || input > 9) {
+        cout << "Invalid input. Try again." << input << endl;
+        takeInput();
+        return;
+    }
+
+    // thanks Abbasy. Very cool big brain math
     int row = ((input - 1) / 3);
     int column = ((input - 1) % 3);
 

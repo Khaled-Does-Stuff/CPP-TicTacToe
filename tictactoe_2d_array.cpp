@@ -17,10 +17,14 @@ int turnCount = 0;
 const string X = "\033[1;31;49mX\033[0m";
 const string O = "\033[1;32;49mO\033[0m";
 
-// Clears the console (in linux/win11)
+// Clears the console (in linux/win11??)
 // https://stackoverflow.com/a/43884673/16867144
 void clearConsole() {
     cout << "\033c" << endl;
+    // this code runs only when compiled in binbows
+#if _WIN32
+    system("cls");
+#endif
 }
 
 void printCurrentGameState() {
@@ -49,18 +53,12 @@ void takeGameInput() {
         return;
     }
 
-    if (input < 1 || input > 9) {
-        cout << "Invalid input. Try again." << input << endl;
-        takeGameInput();
-        return;
-    }
-
     // thanks Abbasy. Very cool big brain math
     int row = ((input - 1) / 3);
     int column = ((input - 1) % 3);
 
-    if (gameBoard[row][column] == X || gameBoard[row][column] == O) {
-        cout << "Invalid input. Try again." << endl;
+    if (input < 1 || input > 9 || gameBoard[row][column] == X || gameBoard[row][column] == O) {
+        cout << "Invalid input. Try again." << input << endl;
         takeGameInput();
         return;
     }
@@ -141,11 +139,13 @@ void startGameplayLoop() {
     } while (getWinPlayer() == "");
 
     clearConsole();
+    printTitle();
     printCurrentGameState();
     cout
         << endl
-        << setw(25)
-        << getWinPlayer() << " Won" << endl;
+        << setw(32)
+        << getWinPlayer() << " Won" << endl
+        << endl;
 
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');

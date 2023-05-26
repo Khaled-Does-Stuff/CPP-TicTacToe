@@ -2,17 +2,12 @@
 #include <limits>
 
 using namespace std;
-void printCurrentGameState();
-void takeInput();
-bool gameOver();
-string getWinPlayer();
+void showMenu();
 
 inline bool theyAreSame(string x, string y, string z) {
     return (x == y && y == z);
 }
 
-// It's too much unnecessary work
-// if I use 2d array
 string gameBoard[3][3] = {{"1", "2", "3"},
                           {"4", "5", "6"},
                           {"7", "8", "9"}};
@@ -22,25 +17,13 @@ bool playerOne = true;
 const string X = "\033[1;31;49mX\033[0m";
 const string O = "\033[1;32;49mO\033[0m";
 
-int main() {
-    do {
-        printCurrentGameState();
-        takeInput();
-    } while (getWinPlayer() == "");
-
-    printCurrentGameState();
-    cout
-        << endl
-        << getWinPlayer() << " Won";
-
-    return 0;
+// Clears the console (in linux/win11)
+// https://stackoverflow.com/a/43884673/16867144
+void clearConsole() {
+    cout << "\033c" << endl;
 }
 
 void printCurrentGameState() {
-    // Clears the console (in linux/win11)
-    // https://stackoverflow.com/a/43884673/16867144
-    cout << "\033c" << endl;
-
     cout << " " << gameBoard[0][0] << " | " << gameBoard[0][1] << " | " << gameBoard[0][2] << endl;
     cout << "-----------" << endl;
     cout << " " << gameBoard[1][0] << " | " << gameBoard[1][1] << " | " << gameBoard[1][2] << endl;
@@ -49,7 +32,7 @@ void printCurrentGameState() {
     cout << endl;
 }
 
-void takeInput() {
+void takeGameInput() {
     cout << "Please give input: (Range: 1 to 9), Player "
          << (playerOne ? X : O)
          << ": ";
@@ -62,13 +45,13 @@ void takeInput() {
         cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         cout << "Invalid input. Try again." << endl;
 
-        takeInput();
+        takeGameInput();
         return;
     }
 
     if (input < 1 || input > 9) {
         cout << "Invalid input. Try again." << input << endl;
-        takeInput();
+        takeGameInput();
         return;
     }
 
@@ -78,7 +61,7 @@ void takeInput() {
 
     if (gameBoard[row][column] == X || gameBoard[row][column] == O) {
         cout << "Invalid input. Try again." << endl;
-        takeInput();
+        takeGameInput();
         return;
     }
 
@@ -123,4 +106,45 @@ string getWinPlayer() {
     }
 
     return "Nobody";  // Draw
+}
+
+void startGameplayLoop() {
+    do {
+        clearConsole();
+        printCurrentGameState();
+        takeGameInput();
+    } while (getWinPlayer() == "");
+
+    clearConsole();
+    printCurrentGameState();
+    cout
+        << endl
+        << getWinPlayer() << " Won" << endl;
+
+    cin.clear();
+    cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    showMenu();
+}
+
+void showMenu() {
+    cout << endl
+         << "<<Insert Game Title>>"
+         << endl
+         << endl;
+    cout << "Hit Enter to start | q: Quit" << endl;
+
+    switch (cin.get()) {
+        case 'q':
+        case 'Q':
+            cout << "Bye!" << endl;
+            return;
+
+        default:
+            startGameplayLoop();
+    }
+}
+
+int main() {
+    showMenu();
+    return 0;
 }

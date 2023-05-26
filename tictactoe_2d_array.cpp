@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <iostream>
 #include <limits>
 
@@ -8,10 +9,9 @@ inline bool theyAreSame(string x, string y, string z) {
     return (x == y && y == z);
 }
 
-string gameBoard[3][3] = {{"1", "2", "3"},
-                          {"4", "5", "6"},
-                          {"7", "8", "9"}};
-bool playerOne = true;
+const int row = 3, col = 3;
+string gameBoard[row][col];
+int turnCount = 0;
 
 // Color taken from:  https://stackoverflow.com/a/45300654/16867144
 const string X = "\033[1;31;49mX\033[0m";
@@ -24,17 +24,17 @@ void clearConsole() {
 }
 
 void printCurrentGameState() {
-    cout << " " << gameBoard[0][0] << " | " << gameBoard[0][1] << " | " << gameBoard[0][2] << endl;
-    cout << "-----------" << endl;
-    cout << " " << gameBoard[1][0] << " | " << gameBoard[1][1] << " | " << gameBoard[1][2] << endl;
-    cout << "-----------" << endl;
-    cout << " " << gameBoard[2][0] << " | " << gameBoard[2][1] << " | " << gameBoard[2][2] << endl;
+    cout << setw(15) << " " << gameBoard[0][0] << " | " << gameBoard[0][1] << " | " << gameBoard[0][2] << endl;
+    cout << setw(25) << "-----------" << endl;
+    cout << setw(15) << " " << gameBoard[1][0] << " | " << gameBoard[1][1] << " | " << gameBoard[1][2] << endl;
+    cout << setw(25) << "-----------" << endl;
+    cout << setw(15) << " " << gameBoard[2][0] << " | " << gameBoard[2][1] << " | " << gameBoard[2][2] << endl;
     cout << endl;
 }
 
 void takeGameInput() {
-    cout << "Please give input: (Range: 1 to 9), Player "
-         << (playerOne ? X : O)
+    cout << "Please give input (Range: 1 to 9), Player "
+         << (turnCount % 2 == 0 ? X : O)
          << ": ";
 
     int input;
@@ -65,11 +65,14 @@ void takeGameInput() {
         return;
     }
 
-    gameBoard[row][column] = (playerOne ? X : O);
-    playerOne = !playerOne;
+    gameBoard[row][column] = (turnCount % 2 == 0 ? X : O);
+    turnCount++;
 }
 
 string getWinPlayer() {
+    // Minimum 5 turn required for winning
+    if (turnCount < 5) return "";
+
     // Horizontal checks
     if (theyAreSame(gameBoard[0][0], gameBoard[0][1], gameBoard[0][2]))
         return gameBoard[0][0];
@@ -108,9 +111,31 @@ string getWinPlayer() {
     return "Nobody";  // Draw
 }
 
+void setupGameBoard() {
+    turnCount = 0;
+    int n = 1;
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            gameBoard[i][j] = to_string(n);
+            n++;
+        }
+    }
+}
+
+void printTitle() {
+    cout << endl
+         << setw(35)
+         << "<<Imagine Game Title Here :3>>"
+         << endl
+         << endl;
+}
+
 void startGameplayLoop() {
+    setupGameBoard();
+
     do {
         clearConsole();
+        printTitle();
         printCurrentGameState();
         takeGameInput();
     } while (getWinPlayer() == "");
@@ -119,6 +144,7 @@ void startGameplayLoop() {
     printCurrentGameState();
     cout
         << endl
+        << setw(25)
         << getWinPlayer() << " Won" << endl;
 
     cin.clear();
@@ -127,10 +153,6 @@ void startGameplayLoop() {
 }
 
 void showMenu() {
-    cout << endl
-         << "<<Insert Game Title>>"
-         << endl
-         << endl;
     cout << "Hit Enter to start | q: Quit" << endl;
 
     switch (cin.get()) {
@@ -145,6 +167,7 @@ void showMenu() {
 }
 
 int main() {
+    printTitle();
     showMenu();
     return 0;
 }
